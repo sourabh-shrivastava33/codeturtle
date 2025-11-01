@@ -1,31 +1,63 @@
-import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
 import { GithubIcon } from "lucide-react";
 import { Button } from "../ui/button";
-import { SignInButton, SignUpButton } from "@clerk/nextjs";
+import { SignInButton } from "@clerk/nextjs";
+import Image from "next/image";
+import { currentUser } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 
-const SignIn = () => {
+const SignIn = async () => {
+  const user = await currentUser();
+  if (user) redirect("/dashboard");
+
   return (
-    <div className="flex items-center justify-center min-h-screen w-full bg-secondary">
-      <div className="md:min-w-xl shadow-2xl shadow-secondary">
-        <Card>
-          <CardHeader className="flex flex-col items-center">
-            <GithubIcon size={40} />
+    <div className="flex items-center justify-center min-h-screen w-full bg-background">
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:64px_64px]" />
+      <div>
+        <Card className="relative md:min-w-xl shadow-2xl shadow-secondary bg-linear-to-br from-bg-background via-bg-background-80 to-background">
+          <Image
+            src={"/logo.png"}
+            alt="Logo"
+            width={200}
+            height={0}
+            className="absolute top-0 left-[35%]"
+          />
+          <CardHeader className=" flex flex-col items-center mt-[130px]">
             <CardTitle className="text-primary/80 ">
               Your personal code reviewer
             </CardTitle>
-            <p className="text-slate-700 font-bold">
+            <p className="text-muted-foreground font-light text-sm">
               AI powered code reviewer for your repositories
             </p>
           </CardHeader>
           <CardContent className="flex items-center justify-center gap-3">
             <SignInButton mode="modal">
-              <Button className="bg-primary text-secondary hover:bg-muted-foreground  transition-all duration-300 uppercase px-2 py-1">
-                Sign In
+              <Button className="bg-primary text-primary-foreground  hover:text-secondary-foreground hover:bg-secondary  transition-all duration-500  px-7 py-2 text-xs font-bold ">
+                <GithubIcon size={20} />
+                <span>Continue with Github</span>
               </Button>
             </SignInButton>
           </CardContent>
+          <CardFooter className="text-center flex items-center justify-center ">
+            <p className="text-xs font-normal text-muted-foreground/70">
+              By continuing, you agree to our Terms of Service and Privacy
+              Policy
+            </p>
+          </CardFooter>
         </Card>
+
+        <div className="mt-8 flex items-center justify-center gap-3">
+          <div className="w-3 h-3 bg-green-600 rounded-4xl"></div>
+          <p className="text-muted-foreground font-lighter text-xs">
+            All systems operational
+          </p>
+        </div>
       </div>
     </div>
   );
