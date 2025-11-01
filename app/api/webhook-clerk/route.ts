@@ -3,6 +3,7 @@ import { Webhook } from "svix";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { auth, WebhookEvent } from "@clerk/nextjs/server";
+import { handleUserCreate } from "@/lib/actions/webhook";
 
 const CLERK_WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET;
 
@@ -36,7 +37,7 @@ export async function POST(req: Request) {
     // Create a new Svix instance with your webhook secret
     const wh = new Webhook(CLERK_WEBHOOK_SECRET);
 
-    let event;
+    let event: WebhookEvent;
 
     // Verify the webhook
     try {
@@ -59,6 +60,7 @@ export async function POST(req: Request) {
     // Handle the webhook
     switch (type) {
       case "user.created":
+        await handleUserCreate(data);
         break;
       case "user.updated":
         debugger;
