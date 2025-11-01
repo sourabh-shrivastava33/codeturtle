@@ -2,7 +2,7 @@
 import { Webhook } from "svix";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
-import { WebhookEvent } from "@clerk/nextjs/server";
+import { auth, WebhookEvent } from "@clerk/nextjs/server";
 
 const CLERK_WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET;
 
@@ -52,15 +52,16 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
-    const { type } = event;
+    const { type, data } = event;
 
-    console.log("Clerk event received:", type);
+    console.log("Clerk event received:", type, data, event);
 
     // Handle the webhook
     switch (type) {
       case "user.created":
         break;
       case "user.updated":
+        debugger;
         break;
       case "user.deleted":
         break;
