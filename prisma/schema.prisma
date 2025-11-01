@@ -6,9 +6,23 @@
 
 generator client {
   provider = "prisma-client"
+  output   = "../lib/generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+
+model User{
+  id        String @id @default(cuid())
+  clerkId   String @unique
+  email     String @unique
+  firstName String?
+  lastName  String?
+  phone     String?
+  createdAt DateTime @default(now()) // member since sep 2025
+  updatedAt DateTime @updatedAt
+  @@map("users")
 }
