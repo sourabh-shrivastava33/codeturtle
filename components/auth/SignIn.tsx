@@ -9,13 +9,9 @@ import { GithubIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import { SignInButton } from "@clerk/nextjs";
 import Image from "next/image";
-import { currentUser } from "@clerk/nextjs/server";
-import { redirect } from "next/navigation";
 import { SYSTEM_OPERATION_MESSAGE } from "../../constants/systemStatus";
 
 const SignIn = async () => {
-  const user = await currentUser();
-  if (user) redirect("/dashboard");
   const systemStatus: Response = await fetch(
     `${process.env.NEXT_PUBLIC_BASE_URL}/api/health`,
     {
