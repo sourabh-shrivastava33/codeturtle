@@ -2,7 +2,7 @@
 import { Activity, LayoutDashboard, Settings } from "lucide-react";
 import React from "react";
 import { Button } from "../ui/button";
-import { redirect, usePathname } from "next/navigation";
+import { redirect, usePathname, useRouter } from "next/navigation";
 
 interface NavButtonProps {
   title: "dashboard" | "activity" | "settings";
@@ -17,11 +17,12 @@ const NavIcons = {
 
 const NavButton = ({ link, title }: NavButtonProps) => {
   const path = usePathname();
+  const router = useRouter();
 
   const isActivePath = path === link;
   return (
     <Button
-      onClick={() => redirect(link)}
+      onClick={() => router.push(link)}
       className={`${
         isActivePath
           ? "bg-muted-foreground text-white hover:bg-muted-foreground hover:text-white"

@@ -21,7 +21,6 @@ const SignIn = async () => {
   const { data } = await systemStatus.json();
   const isAllRunning = data.every((d: { status: boolean }) => d.status) ? 0 : 1;
 
-  debugger;
   return (
     <div className="flex items-center justify-center min-h-screen w-full bg-background">
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:64px_64px]" />

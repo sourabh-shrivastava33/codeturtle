@@ -8,7 +8,7 @@ export default function ProtectedLayout({
   return (
     <div className="relative min-h-screen bg-background">
       <Navbar />
-      <div className="max-w-3xl md:max-w-6xl lg:max-w-8xl mx-auto pt-23 px-6">
+      <div className="max-w-5xl md:max-w-8xl lg:max-w-[80%] mx-auto pt-23 px-6">
         {children}
       </div>
     </div>

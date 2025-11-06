@@ -16,7 +16,7 @@ model User {
   phone       String?
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
-  GithubCreds GithubCreds[]
+  githubCreds GithubCreds[]
 
   @@map("users")
 }
@@ -29,4 +29,27 @@ model GithubCreds {
   user_name String
   email String
   user   User   @relation(fields: [userId], references: [id])
+  repositories Repositories[]
+}
+
+model Repositories{
+  id String @id @default(cuid())
+  githubId String
+  name String
+ownerName String
+fullName String
+isPrivate Boolean @default(false)
+autoReviewEnabled Boolean @default(false)
+webhookId String?
+webhookSecret String?
+defaultBranch String
+htmlUrl String
+cloneUrl String
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  lastSyncedAt DateTime?      
+  lastPrAt DateTime?
+
+  github GithubCreds @relation(fields: [githubId],references: [id])
 }
