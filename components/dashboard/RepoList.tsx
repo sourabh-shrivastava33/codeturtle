@@ -34,14 +34,14 @@ const RepoList = ({
     <div
       onClick={() => handleSelectRepo(id)}
       className={`relative px-5 py-4 border-2 mb-2 rounded-lg 
-    ${isSelectedRepo ? "border-blue-500" : "border-secondary/10"}
+    ${isSelectedRepo ? "border-blue-500" : "border-border"}
     hover:bg-primary/15 
     ${connected ? "cursor-not-allowed bg-primary/10" : "bg-card"}
     min-h-[110px] flex flex-col justify-between
   `}
     >
       <div
-        className={`absolute flex items-center justify-center top-4 left-4 w-5 h-5 border ${
+        className={`absolute flex items-center justify-center top-4 left-4 w-5 h-5 border-2 ${
           connected
             ? "border-green-500"
             : isSelectedRepo

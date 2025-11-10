@@ -5,6 +5,8 @@ import { prisma } from "../prisma";
 import { Octokit } from "@octokit/rest";
 import { decryptToken } from "../utils";
 import "dotenv/config";
+import { User } from "@prisma/client";
+import { UserDataType } from "../types/user";
 interface userObj {
   clerkId: string;
   firstName?: string;
@@ -29,7 +31,7 @@ export async function createUser(user: userObj) {
   }
 }
 
-export async function fetchUserData() {
+export async function fetchUserData(): Promise<UserDataType | null> {
   const userData = await currentUser();
   if (!userData) throw new Error("User not found");
   const user = await prisma.user.findFirst({
@@ -57,7 +59,7 @@ export async function fetchUserData() {
 export async function getUserGithubData() {
   try {
     const userData = await fetchUserData();
-    const encryptedAccessToken = userData!.githubCreds?.[0]?.access_token;
+    const encryptedAccessToken = userData!.githubCreds?.access_token;
 
     if (!encryptedAccessToken) throw new Error("Access token is required");
 

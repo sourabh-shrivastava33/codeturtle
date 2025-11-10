@@ -1,6 +1,7 @@
 import { DASHBOARD_METRIC } from "@/constants/dashboard";
 import React from "react";
 import MetricCard from "./MetricCard";
+import { UserDataType } from "@/lib/types/user";
 
 const DashboardMetrics = () => {
   return (
