@@ -16,17 +16,86 @@ model User {
   phone       String?
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
-  GithubCreds GithubCreds[]
+  githubCreds GithubCreds?
 
   @@map("users")
 }
 
 model GithubCreds {
   id     String @id @default(cuid())
-  userId String
+  userId String @unique
     status Boolean @default(true)
   access_token String
   user_name String
   email String
   user   User   @relation(fields: [userId], references: [id])
+  repositories Repositories[]
+}
+
+model Repositories{
+  id String @id @default(cuid())
+  githubId String
+  repoId Int @unique
+  name String
+ownerName String
+fullName String
+description String
+isPrivate Boolean @default(false)
+autoReviewEnabled Boolean @default(false)
+webhookId Int?
+defaultBranch String
+htmlUrl String
+cloneUrl String
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  lastSyncedAt DateTime?      
+  lastPrAt DateTime?
+ pullRequests PullRequest[]
+  github GithubCreds @relation(fields: [githubId],references: [id])
+}
+
+model PullRequest {
+  id            String   @id @default(cuid())
+  repositoryId  String
+  prNumber      Int
+  title         String
+  description   String?
+  author        String
+  authorAvatar  String?
+  baseBranch    String
+  headBranch    String
+  reviewStatus        reviewStatus   @default(PENDING) // open | closed | merged
+  htmlUrl       String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  repository    Repositories @relation(fields: [repositoryId], references: [id], onDelete: Cascade)
+  suggestions   AiSuggestion[]
+
+  @@unique([repositoryId, prNumber])
+  @@map("pull_requests")
+}
+
+model AiSuggestion {
+  id              String   @id @default(cuid())
+  pullRequestId   String
+  agentType       String   // code_quality | security | performance | style
+  score           Int?     // 0-100
+  issuesFound     Int      @default(0)
+  summary         String?
+  diffSuggestions Json?    // Array of {file, lineNumber, oldCode, newCode, reason}
+  status          String   @default("pending") // pending | completed | failed
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  pullRequest     PullRequest @relation(fields: [pullRequestId], references: [id], onDelete: Cascade)
+
+  @@map("ai_suggestions")
+}
+
+enum reviewStatus{
+  PENDING
+  REQUESTED_CHANGE
+COMPLETED
 }
