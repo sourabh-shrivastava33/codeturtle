@@ -1,5 +1,7 @@
+import { createPr } from "@/lib/actions/github/pr";
 import { fetchAllPrs } from "@/lib/actions/repositories";
-import { useQuery } from "@tanstack/react-query";
+import { PullRequestListItem } from "@/lib/types/pr";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 export function useFetchAllPRs(
   githubId?: string,
@@ -12,5 +14,17 @@ export function useFetchAllPRs(
       return fetchAllPrs(id!);
     },
     ...options,
+  });
+}
+
+export function useCreatePr() {
+  return useMutation({
+    mutationFn: ({
+      data,
+      repoId,
+    }: {
+      data: PullRequestListItem;
+      repoId: string;
+    }) => createPr(data, repoId),
   });
 }

@@ -42,6 +42,7 @@ export async function saveRepositories(data: RepositoriesCreate) {
       data: {
         name: data.name,
         github: { connect: { id: data.githubId } },
+        repoId: data.repo_id,
         fullName: data.full_name,
         cloneUrl: data.clone_url,
         defaultBranch: data.default_branch,
@@ -95,14 +96,31 @@ export async function fetchAllPrs(githubId: string) {
       where: { githubId },
       select: {
         id: true,
+        fullName: true,
         pullRequests: true,
       },
     });
 
     // Flatten all PRs into one array
-    const allPrs = reposWithPrs.flatMap((repo) => repo.pullRequests);
+    const allPrs = reposWithPrs.flatMap((repo) =>
+      repo.pullRequests.map((pr) => ({
+        ...pr,
+        repoName: repo.fullName,
+      }))
+    );
 
     return allPrs;
+  } catch (error) {
+    throw new Error(`Something went wrong: ${JSON.stringify(error)}`);
+  }
+}
+
+export async function fetchRepositoryByRepoId(repoId: number) {
+  try {
+    const repository = await prisma.repositories.findFirst({
+      where: { repoId: repoId },
+    });
+    return repository;
   } catch (error) {
     throw new Error(`Something went wrong: ${JSON.stringify(error)}`);
   }

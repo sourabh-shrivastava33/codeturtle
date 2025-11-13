@@ -35,6 +35,7 @@ model GithubCreds {
 model Repositories{
   id String @id @default(cuid())
   githubId String
+  repoId Int @unique
   name String
 ownerName String
 fullName String
@@ -64,7 +65,7 @@ model PullRequest {
   authorAvatar  String?
   baseBranch    String
   headBranch    String
-  status        String   @default("open") // open | closed | merged
+  reviewStatus        reviewStatus   @default(PENDING) // open | closed | merged
   htmlUrl       String
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
@@ -91,4 +92,10 @@ model AiSuggestion {
   pullRequest     PullRequest @relation(fields: [pullRequestId], references: [id], onDelete: Cascade)
 
   @@map("ai_suggestions")
+}
+
+enum reviewStatus{
+  PENDING
+  REQUESTED_CHANGE
+COMPLETED
 }

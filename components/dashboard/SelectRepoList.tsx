@@ -79,6 +79,7 @@ const SelectRepoList = ({
     mutation.mutate(
       {
         name: repoData.name,
+        repo_id: repoData.id,
         full_name: repoData.full_name,
         is_private: repoData.private,
         owner_name: repoData.owner.login,

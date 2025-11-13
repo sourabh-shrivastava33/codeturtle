@@ -4,6 +4,9 @@ const isPublicRoute = createRouteMatcher([
   "/api/health(.*)",
   "/",
   "/api/webhook-clerk(.*)",
+  // Make GitHub webhook endpoint public so external GitHub requests are not
+  // intercepted by Clerk's auth middleware.
+  "/api/webhook-github(.*)",
 ]);
 
 export default clerkMiddleware(async (auth, request) => {

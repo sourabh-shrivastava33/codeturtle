@@ -5,7 +5,7 @@ import { UserDataType } from "@/lib/types/user";
 
 const RepoManagement = ({ user }: { user: UserDataType }) => {
   return (
-    <div className="flex md:flex-col items-start justify-start gap-3">
+    <div className="flex flex-col items-start justify-start gap-3 mb-10 lg:mb-0 lg:h-full">
       <ConnectRepo user={user} />
       <ConnectedRepo user={user} />
     </div>

@@ -26,7 +26,7 @@ export async function createPr(
 ) {
   const payload = createPrPayload(data, repoId);
   if (Array.isArray(data)) return batchPrCreate(payload as PullRequestType[]);
-  else return null;
+  else return prCreate(payload as PullRequestType);
 }
 
 export function createPrPayload(
