@@ -17,7 +17,7 @@ model User {
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
   githubCreds GithubCreds?
-
+approvals Approval[]
   @@map("users")
 }
 
@@ -80,7 +80,7 @@ model PullRequest {
 model AiSuggestion {
   id              String   @id @default(cuid())
   pullRequestId   String
-  agentType       String   // code_quality | security | performance | style
+  agentType       AIAgentType   // code_quality | security | performance | style
   score           Int?     // 0-100
   issuesFound     Int      @default(0)
   summary         String?
@@ -88,14 +88,42 @@ model AiSuggestion {
   status          String   @default("pending") // pending | completed | failed
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
-  
+  startedAt    DateTime?
+  completedAt  DateTime?
+handoffTo String?
+handoffFrom String?
+handOffReason String?
   pullRequest     PullRequest @relation(fields: [pullRequestId], references: [id], onDelete: Cascade)
-
+approvals      Approval[]
   @@map("ai_suggestions")
+}
+
+model Approval {
+  id            String   @id @default(cuid())
+  token         String   @unique
+  userId        String
+  suggestionId  String
+  filePath      String      // Which file to edit
+  startLine     Int         // Which lines
+  endLine       Int
+  replacementCode String    // What changes
+  expiresAt     DateTime
+  createdAt     DateTime   @default(now())
+  approved      Boolean    @default(false)
+  
+  user          User      @relation(fields: [userId], references: [id])
+  suggestion    AiSuggestion @relation(fields: [suggestionId], references: [id])
 }
 
 enum reviewStatus{
   PENDING
   REQUESTED_CHANGE
 COMPLETED
+}
+
+enum AIAgentType{
+  CODE_QUALITY
+  SECURITY
+  PERFORMANCE
+  STYLE
 }
